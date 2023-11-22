@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/user";
+import Role from "../models/role";
 dotenv.config();
 export const checkPermission = async (req, res, next) => {
-  try {
+    try {
     // Bước 1: kiểm tra thông tin token gửi có không? Nếu không có thì thông báo cần phải đăng nhập
-    console.log(req.headers.authorization)
     if (!req.headers.authorization) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -15,18 +15,18 @@ export const checkPermission = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    console.log(token);
     // Bước 4: Giải mã token và lấy ID, kiểm tra ID tồn tại trong db không?
     const { id } = jwt.verify(token, process.env.SECRET_CODE);
     // Bước 5: Kiểm tra quyền của user có phải là admin không? Nếu không phải thì thông báo không có quyền truy cập tài nguyên
     const user = await User.findById(id);
-    // Bước 6: Nếu hợp lệ thì cho phép truy cập tài nguyên
-    if (user.role !== "admin") {
+    const role = await Role.findById(user.role);
+    if (!role || role.role_name !== "admin") {
       return res
         .status(401)
         .json({ message: "Bạn không có quyền truy cập tài nguyên" });
     }
     req.user = user;
-
     next();
   } catch (error) {
     return res.status(401).json({ message: "No token provided" });

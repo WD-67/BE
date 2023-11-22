@@ -1,3 +1,4 @@
+import { array } from "joi";
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
@@ -7,6 +8,9 @@ const Category = new Schema({
   },
   desciption: {
     type: String,
+  },
+  image: {
+    type: Array,
   },
   status: {
     type: String,

@@ -22,7 +22,6 @@ import routerUser from "./routes/user.js";
 import routerSize from "./routes/size.js";
 import routerColor from "./routes/color.js";
 
-
 import routerCustomer from "./routes/customer.js";
 
 //config

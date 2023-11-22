@@ -22,7 +22,7 @@ export const get = async (req, res) => {
       return res.status(400).json({ message: "Lấy ảnh thất bại" });
     } 
      res.status(200).json({ tieude
-      : tintuc.tieude, noidung:tintuc.noidung, trang_thai:tintuc.trang_thai});
+      : tintuc.tieude, noidung:tintuc.noidung, trang_thai:tintuc.trang_thai,image:tintuc.image});
   } catch (error) {
     if (error.tieude === "CastError") {
       return res.status(400).json({ message: "Id không hợp lệ" });

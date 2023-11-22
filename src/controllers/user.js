@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import Product from "../models/product";
 dotenv.config();
-
+let isLoggedOut = false;
 const { SECRET_CODE, EMAIL_USERNAME, EMAIL_PASSWORD } = process.env;
 
 const transporter = nodemailer.createTransport({
@@ -18,8 +18,107 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export const signout = async (req, res) => {
+  try {
+    if (isLoggedOut) {
+      return res.status(400).json({
+        message: "Bạn đã đăng xuất rồi",
+      });
+    }
+    // Xóa token bằng cách xóa cookie chứa token
+    res.clearCookie("token");
+
+    // Đánh dấu người dùng đã đăng xuất
+    isLoggedOut = true;
+
+    return res.status(200).json({
+      message: "Đăng xuất thành công",
+    });
+    //res.redirect("/");  Chuyển hướng người dùng về trang chủ
+  } catch (error) {
+    return res.status(500).json({
+      message: "Lỗi server",
+    });
+  }
+};
+
+
+
+
+export const signupUser = async (req, res) => {
+  const { name, fullname, ngaysinh, trang_thai, email, password, image_url } = req.body;
+
+  try {
+    // validate đầu vào
+    const { error } = signupSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const errors = error.details.map((err) => err.message);
+      return res.status(400).json({
+        messages: errors,
+      });
+    }
+
+    // Kiểm tra trong db có tk không?
+    const userExist = await User.findOne({ email: req.body.email });
+    if (userExist) {
+      return res.status(400).json({
+        messages: "Email đã tồn tại",
+      });
+    }
+
+    // Tìm vai trò "user" trong cơ sở dữ liệu
+    const userRole = await Role.findOne({ role_name: "user" });
+    if (!userRole) {
+      return res.status(400).json({
+        messages: "Không tìm thấy vai trò",
+      });
+    }
+
+    // Tạo người dùng với vai trò "user" và các thông tin khác
+    const user = await User.create({
+      name,
+      fullname,
+      ngaysinh,
+      email,
+      image_url,
+      password,
+      role: userRole._id // Gán vai trò "user"
+    });
+
+    // Mã hóa mật khẩu
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    // Gửi email thông báo tạo tài khoản thành công
+    const mailOptions = {
+      from: "your-email@example.com", // Địa chỉ email gửi
+      to: email, // Địa chỉ email người nhận
+      subject: "Chào Mừng", // Tiêu đề email
+      text: "Chúc mừng bạn đã đăng ký thành công tài khoản", // Nội dung email
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+
+    return res.status(201).json({
+      message: "Tạo tài khoản thành công",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const signup = async (req, res) => {
-  const { name, fullname, ngaysinh, trang_thai, email, password, role_name, image_url } = req.body;
+  const { name, fullname, ngaysinh, trang_thai, email, password,role: role_name, image_url } = req.body;
   
   try {
     // validate đầu vào
@@ -91,6 +190,58 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
   try {
+    const { email, password } = req.body;
+    const { error } = signinSchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      return res.json({
+        success: false,
+        messages: error.details.map((detail) => detail.message),
+      });
+    }
+    const haveUser = await User.findOne({ email }).populate('role', 'id role_name');
+    if (!haveUser) {
+      return res.status(400).json({
+        message: "Email không tồn tại",
+      });
+    }
+    // if (haveUser.isBlocked) {
+    //   return res.status(403).json({ message: "Tài khoản của bạn đã bị khóa" });
+    // }
+    const checkPass = await bcrypt.compare(password, haveUser.password);
+    if (!checkPass) {
+      return res.status(400).json({
+        message: "Mật khẩu không chính xác",
+      });
+    }
+    const token = jwt.sign(
+      {
+        id: haveUser._id,
+      },
+      SECRET_CODE,
+      { expiresIn: "1d" }
+    );
+    
+    // Đặt JWT vào cookie thay vì accessToken
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 86400000 }); // 1 ngày
+    
+    haveUser.password = undefined;
+    return res.status(200).json({
+      message: "Đăng nhập thành công",
+      user: haveUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Lỗi server",
+    });
+  }
+};
+
+
+
+export const signIn = async (req, res) => {
+  try {
     const { error } = signinSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errors = error.details.map((err) => err.message);
@@ -100,7 +251,7 @@ export const signin = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).populate('role', 'id role_name');
     if (!user) {
       return res.status(400).json({
         messages: "Email không tồn tại",
@@ -115,6 +266,7 @@ export const signin = async (req, res) => {
     }
     const token = jwt.sign({ id: user._id }, SECRET_CODE, { expiresIn: "1d" });
     user.password = undefined;
+
     return res.status(200).json({
       message: "Đăng nhập thành công",
       accessToken: token,
@@ -212,7 +364,7 @@ export const update = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate("addressUser");
+    const user = await User.findById(req.params.id).populate('role', 'id role_name');
     const favoriteProduct = await Product.find({
       _id: { $in: user.favoriteProducts },
     });

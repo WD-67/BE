@@ -1,16 +1,8 @@
 import mongoose from "mongoose";
 const sizeSchema = new mongoose.Schema(
   {
-    name: {
-      type: Number,
-    },
-    quantity: {
-      type: Number,
-    },
+    name: String,
   },
-  {
-    timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 },
-    versionKey: false,
-  }
+  { timestamps: true, versionKey: false }
 );
 export default mongoose.model("Size", sizeSchema);

@@ -19,9 +19,7 @@ export const getAll = async (req, res) => {
 };
 export const get = async (req, res) => {
   try {
-    const data = await imageProduct
-      .findById(req.params.id)
-      .populate("products");
+    const data = await imageProduct.findById(req.params.id);
     if (data.length == 0) {
       return res.status(400).json({ message: "Lấy ảnh 1 thất bại" });
     } else {

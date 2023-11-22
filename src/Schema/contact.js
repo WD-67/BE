@@ -26,3 +26,4 @@ export const ContactSchema = joi.object({
     //     "string.base": "Trạng thái phải là 1 string",
     // }),
 });
+

@@ -18,11 +18,11 @@ const Information = new Schema({
         required: true
     },
     image: {
-        type: String,
+        type: Array,
         required: true
     },
     logo: {
-        type: String,
+        type: Array,
         required: true
 
     },

@@ -1,5 +1,5 @@
 import Size from "../models/size";
-import { sizeSchema } from "../Schema/product";
+import { sizeSchema } from "../Schema/size";
 export const getAllSize = async (req, res) => {
   try {
     const data = await Size.find();

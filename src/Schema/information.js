@@ -15,7 +15,7 @@ export const InformationSchema = joi.object({
         "any.required": "Trường Phone này là bắt buộc",
         "number.base": "Phone phải là số",
     }),
-    image: joi.string().required().messages({
+    image: joi.array().required().messages({
         "string.empty": "image không được để trống",
         "any.required": "Trường image này là bắt buộc ",
         "string.base": "image phải là 1 string",
@@ -41,3 +41,4 @@ export const InformationSchema = joi.object({
     //     "string.base": "Trạng thái phải là 1 string",
     // }),
 });
+

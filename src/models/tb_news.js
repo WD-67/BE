@@ -7,10 +7,10 @@ const newsSchema = new mongoose.Schema(
         noidung: {
             type: String,
         },
+         image: Array,
         trang_thai: {
             type: String
         },
-    // news: [{ type: mongoose.Types.ObjectId, ref: "image_news" }],
     },
     { timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false }
 );
