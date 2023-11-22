@@ -13,4 +13,9 @@ router.get("/color/:id", getColor);
 router.post("/color/", createColor);
 router.put("/color/:id", updateColor);
 router.delete("/color/:id", removeColor);
+import Color from '../models/color.js'
+router.get("/loadColor", async (req, res) => {
+  const a = await Color.find({});
+  res.json(a)
+})
 export default router;

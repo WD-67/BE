@@ -20,6 +20,8 @@ import routerPayment from "./routes/vnpay.router.js";
 import routerProduct from "./routes/product.js";
 import routerUser from "./routes/user.js";
 import routerSize from "./routes/size.js";
+import routerColor from "./routes/color.js";
+
 
 import routerCustomer from "./routes/customer.js";
 
@@ -49,6 +51,7 @@ app.use("/api/sales", saleRouter);
 app.use("/api", routerProduct);
 app.use("/api", routerUser);
 app.use("/api", routerSize);
+app.use("/api", routerColor);
 
 app.use("/api", routerCustomer);
 

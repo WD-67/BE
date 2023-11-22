@@ -18,11 +18,14 @@ const Orders = new mongoose.Schema({
         type: Date,
     },
     id_user: {
-        type: Number,
+        type: String,
     },
     id_product: {
-        type: Number,
+        type: String,
     },
+    size: String,
+    color: String,
+    quantity: String,
 }, {
     collection: 'Orders',
     versionKey: false,

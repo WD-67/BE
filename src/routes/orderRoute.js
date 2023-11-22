@@ -10,10 +10,17 @@ router.get("/GetDetailOrder", Order.GetDetailOrder);
 router.get("/GetAllOrder", Order.GetAllOrder);
 
 //
-router.get("/deleteOrder", Order.deleteOrder);
-router.get("/updateOrder", Order.updateOrder);
+router.delete("/deleteOrder/:id", Order.deleteOrder);
+router.put("/updateOrder/:id", Order.updateOrder);
 
 
+
+//add
+import Size from '../models/size.js';
+router.get('/loadSize', async (req, res) => {
+    const size = await Size.find({});
+    res.json(size)
+})
 
 
 
