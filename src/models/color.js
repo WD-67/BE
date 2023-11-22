@@ -6,7 +6,8 @@ const sizeSchema = new mongoose.Schema(
     },
     quantity: {
       type: Number,
-    },
+
+    },//done
   },
   {
     timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 },
