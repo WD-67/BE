@@ -14,7 +14,6 @@ export const getAll = async (req, res) => {
         message: "Không có sản phẩm nào !",
       });
     }
-    console.log(products);
     const productsWithSaleName = products.map((product) => ({
       ...product._doc,
       sale: product.sale ? product.sale.sale : "No sale", // Thay đổi trường 'sale' thành tên của 'sale'

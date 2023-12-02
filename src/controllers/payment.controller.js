@@ -10,11 +10,6 @@ export const getList = async (req, res) => {
                 model: user,
                 // select: { name: true, phone_number: true, email: true },
             },
-            {
-                path: "product",
-                model: product,
-                // select: { name: true, phone_number: true, email: true },
-            },
         ]);
         res.status(200).json({
             meassge: "Lấy danh sách người thanh toán thành công!!",

@@ -6,14 +6,12 @@ export const paymentSchema = Joi.object({
     bank_code: Joi.string().allow(""),
     language: Joi.string(),
     user: Joi.string().required(),
-    product: Joi.string().required(),
 });
 
 export const validation = (req, res, next) => {
     const schema = Joi.object({
         user: Joi.string().required("UserId bắt buộc"),
-        code: Joi.string().required(),
-        product: Joi.string().required(),
+        code: Joi.string(),
         payment_method: Joi.string().required(),
         totalPrice: Joi.number().required(),
         status: Joi.string().required(),

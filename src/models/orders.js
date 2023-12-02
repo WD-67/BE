@@ -1,32 +1,32 @@
-import mongoose from 'mongoose';
-const Orders = new mongoose.Schema({
-    id_order: {
-        type: Number,
-        required: true,
-        unique: true
+import mongoose from "mongoose";
+const Orders = new mongoose.Schema(
+    {
+        payment_id: {
+            type: mongoose.Types.ObjectId,
+            required: true,
+        },
+        address: {
+            type: String,
+        },
+        phone: {
+            type: Number,
+        },
+        user_id: {
+            type: mongoose.Types.ObjectId,
+            required: true,
+        },
+        products: [{ product_id: { type: mongoose.Types.ObjectId, required: true }, quantity: { type: Number, default: 1 }, _id: false }],
+        status: { type: String, enum: ["pending", "waiting", "delivering", "done", "cancel"], default: "pending" },
+        sale_id: {
+            type: mongoose.Types.ObjectId,
+        },
+        reason: { type: String },
     },
-    address: {
-        type: String,
-    },
-    phone: {
-        type: Number,
-    },
-    status: {
-        type: String,
-    },
-    date_created: {
-        type: Date,
-    },
-    id_user: {
-        type: Number,
-    },
-    id_product: {
-        type: Number,
-    },
-}, {
-    collection: 'Orders',
-    versionKey: false,
-    timestamp: true
-})
+    {
+        collection: "Orders",
+        versionKey: false,
+        timestamp: true,
+    }
+);
 
 export default mongoose.model("Orders", Orders);
