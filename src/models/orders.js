@@ -1,3 +1,4 @@
+import { bool, boolean, string } from 'joi';
 import mongoose from 'mongoose';
 const Orders = new mongoose.Schema({
     id_order: {
@@ -17,12 +18,15 @@ const Orders = new mongoose.Schema({
     date_created: {
         type: Date,
     },
-    id_user: {
-        type: Number,
-    },
-    id_product: {
-        type: Number,
-    },
+    id_user: String,
+    id_product: String,
+    price: String,
+    quantity: String,
+    color: String,
+    size: String,
+    pay_status: Boolean,
+
+    type_pay: String,
 }, {
     collection: 'Orders',
     versionKey: false,

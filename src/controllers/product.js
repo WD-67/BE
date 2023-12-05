@@ -1,5 +1,7 @@
 import Product from "../models/product";
 import { productSchema, UpdateProduct } from "../Schema/product";
+import Colors from "../models/color";
+import Sizes from "../models/size";
 export const getAll = async (req, res) => {
   // const { _sort = "priceSale", _limit = 100, _order = "asc" } = req.query;
   // const option = {
@@ -39,9 +41,40 @@ export const get = async (req, res) => {
         message: "Lấy sản phẩm không thành công !",
       });
     }
+    //sửa
+    var product_new = [];
+    for (const v of product.colorSizes) {
+      const a_name = await Colors.findOne({ _id: v.color });
+      var list_size = [];
+      for (const c of v.sizes) {
+        const c_name = await Sizes.findOne({ _id: c.size });
+        list_size.push({ name: c_name.name, _id: c.size });
+
+      }
+      product_new.push({
+        color: a_name.name,
+        _id: v.color,
+        size: list_size,
+      })
+    }
+
     return res.json({
       message: "Lấy 1 sản phẩm thành công !",
-      product,
+      product: {
+        _id: product._id,
+        name: product.name,
+
+        price: product.price,
+        image: product.image,
+        description: product.description,
+        quantity: product.quantity,
+        sale: product.sale,
+        categoryId: product.categoryId,
+        colorSizes: product_new,
+        is_deleted: product.is_deleted,
+        trang_thai: product.trang_thai,
+
+      },
     });
   } catch (error) {
     if (error.name === "CastError") {

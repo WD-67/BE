@@ -13,4 +13,9 @@ router.get("/size/:id", getSize);
 router.post("/size/",  createSize);
 router.put("/size/:id",  updateSize);
 router.delete("/size/:id",  removeSize);
+import Sizes from "../models/size.js";
+router.get("/loadSize",async(req,res)=>{
+  const data=await Sizes.find({});
+  res.json(data)
+})
 export default router;

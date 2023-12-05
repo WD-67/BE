@@ -6,12 +6,13 @@ import * as per from "../middlewares/checkPermission.js";
 const router = express.Router();
 
 router.post("/order", Order.OrderUser);
+router.post("/add/many/order", Order.addManyOrder);
+
 router.get("/GetDetailOrder", Order.GetDetailOrder);
 router.get("/GetAllOrder", Order.GetAllOrder);
-
 //
-router.get("/deleteOrder", Order.deleteOrder);
-router.get("/updateOrder", Order.updateOrder);
+router.delete("/deleteOrder/:id", Order.deleteOrder);
+router.put("/updateOrder/:id", Order.updateOrder);
 
 
 

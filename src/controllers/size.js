@@ -28,12 +28,13 @@ export const getSize = async (req, res) => {
 };
 export const createSize = async (req, res) => {
   try {
-    const { error } = sizeSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+    // const { error } = sizeSchema.validate(req.body, {
+    //   abortEarly: false,
+    // });
+    
+    // if (error) {
+    //   return res.status(400).json({ message: error.details[0].message });
+    // }
     const size = new Size(req.body);
     const newSize = await size.save();
     res.status(200).json(newSize);

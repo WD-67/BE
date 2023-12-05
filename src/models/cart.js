@@ -12,21 +12,25 @@ const cartItemSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   price: { type: Number },
   priceSale: { type: Number },
-},{ timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false });
+  checkOrder: { type: Boolean, default: false },
+}, { timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false });
 
 const cartSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   items: [cartItemSchema],
+  checkOrder: {
+    type: Boolean,
+    default: false
+  },
   totalQuantity: { type: Number, default: 0 },
   totalPrice: { type: Number, default: 0 },
   totalpriceSale: { type: Number, default: 0 },
-},{ timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false });
+}, { timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false });
 cartSchema.pre("save", async function (next) {
   const cart = this;
   let totalQuantity = 0;
   let totalPrice = 0;
   let totalpriceSale = 0;
-
   for (const item of cart.items) {
     if (item.quantity) {
       totalQuantity += item.quantity;
@@ -34,7 +38,6 @@ cartSchema.pre("save", async function (next) {
       totalpriceSale += item.priceSale * item.quantity;
     }
   }
-
   cart.totalQuantity = totalQuantity;
   cart.totalPrice = totalPrice;
   cart.totalpriceSale = totalpriceSale;

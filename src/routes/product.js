@@ -22,4 +22,10 @@ router.put("/products/:id", update);
 router.delete("/products/:id", remove);
 router.patch("/products/restore/:id", restoreProduct);
 // router.patch("/products/:id", updatePartial);
+
+import Products from "../models/product.js";
+router.get("/loadProduct",async(req,res)=>{
+    const data=await Products.find({});
+    res.json(data);
+})
 export default router;
