@@ -5,4 +5,4 @@ const sizeSchema = new mongoose.Schema(
   },
   { timestamps: true, versionKey: false }
 );
-export default mongoose.model("Size", sizeSchema);
+export default mongoose.model("size", sizeSchema);

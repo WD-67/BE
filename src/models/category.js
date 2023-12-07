@@ -20,4 +20,4 @@ const Category = new Schema({
     default: Date.now,
   },
 });
-export default mongoose.model("category", Category);
+export default mongoose.model("Category", Category);

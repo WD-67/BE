@@ -8,6 +8,7 @@ import {
   getDeletedProducts,
   restoreProduct,
   removeProduct,
+  searchProducts,
   // updatePartial,
 } from "../controllers/product.js";
 import { checkPermission } from "../middlewares/checkPermission.js";
@@ -16,7 +17,7 @@ router.get("/products", getAll);
 router.get("/products-daleted", getDeletedProducts);
 router.delete("/products/hard-delete/:id", removeProduct);
 router.get("/products/:id", get);
-// router.get("/searchProducts", getSearch);
+router.get("/products/search/:name", searchProducts);
 router.post("/products/", create);
 router.put("/products/:id", update);
 router.delete("/products/:id", remove);
