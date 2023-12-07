@@ -15,8 +15,8 @@ router.post("/signin", signin);
 router.post("/signout", signout);
 
 import Users from "../models/user.js";
-router.get("/loadUser",async(req,res)=>{
-    const data=await Users.find({});
+router.get("/loadUser", async (req, res) => {
+    const data = await Users.find({});
     res.json(data);
 })
 export default router;

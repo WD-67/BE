@@ -9,6 +9,7 @@ import {
   updateCartCheck,
 } from "../controllers/cart";
 import Cart from "../models/cart.js";
+import Orders from "../models/orders.js";
 const router = express.Router();
 router.get("/cart", getAllCarts);
 router.get("/cart/:id", getCartById);
@@ -20,6 +21,19 @@ router.delete("/cart/:userId/products/:productId", deleteCart);
 router.get("/cart-delete/:userId/:idProduct", cartDeleteByUser);
 router.put("/cart-check/:id", updateCartCheck);
 
+
+router.post('/SuccessOrder', async (req, res) => {
+  //cp nhat order
+  var body = req.body;
+  const ress = await Orders.find({ id_user: body.data })
+  console.log(body);
+
+  var objsId = ress[ress.length - 1];
+
+  const r = await Orders.updateMany({ date_created: objsId.date_created }, { $set: { type_pay: "online", pay_status: true, updatedAt: new Date(), } })
+  res.json({ pay_success: true })
+
+})
 router.post("/updateCart/:id", async (req, res) => {
   const { id } = req.params;
   const body = req.body

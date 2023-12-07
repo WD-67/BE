@@ -28,9 +28,10 @@ const Orders = new mongoose.Schema({
 
     type_pay: String,
 }, {
-    collection: 'Orders',
-    versionKey: false,
-    timestamp: true
+
+
+
+    timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false
 })
 
 export default mongoose.model("Orders", Orders);

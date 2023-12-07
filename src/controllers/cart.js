@@ -64,13 +64,14 @@ const getCartById = async (req, res) => {
 const createCart = async (req, res) => {
   const { items, userId } = req.body;
   const { size, color, image, quantity, productId, checkOrder } = items[0];
-  console.log(items[0], "đã được tạo");
+  // console.log(items[0], "đã được tạo");
 
   try {
     const cart = await Cart.findOne({ userId });
 
     if (cart) {
-      const existingItem = cart.items.find(item => item.productId === productId);
+      const existingItem = cart.items.find(item => item.productId == productId);
+      console.log(existingItem)
 
       if (existingItem) {
         // Nếu sản phẩm đã tồn tại trong giỏ hàng, chỉ cập nhật số lượng và giá
