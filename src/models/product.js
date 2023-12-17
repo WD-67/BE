@@ -1,10 +1,13 @@
+import { number } from "joi";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 import paginate from "mongoose-paginate-v2";
+
 const sizeQuantitySchema = new Schema({
   size: {
     type: mongoose.Types.ObjectId,
     ref: "size",
+    required: true,
   },
   // quantity: {
   //   type: Number,
@@ -16,6 +19,7 @@ const colorSizeSchema = new Schema({
   color: {
     type: mongoose.Types.ObjectId,
     ref: "Color",
+    required: true,
   },
 
   sizes: [sizeQuantitySchema],
@@ -27,23 +31,23 @@ const productSchema = new Schema(
     image: Array,
     description: String,
     quantity: Number,
-    sale: {
-      type: mongoose.Types.ObjectId,
-      ref: "sale",
-    },
     categoryId: {
       type: mongoose.Types.ObjectId,
       ref: "Category",
+      required: true,
     },
     colorSizes: [colorSizeSchema],
     is_deleted: {
       type: Boolean,
       default: false,
     },
-    trang_thai: {
+    hot_sale: {
+      type: Number,
+      default: 0,
+    },
+    inventoryStatus: {
       type: String,
-      enum: ["active", "deactive"],
-      default: "active",
+      enum: ["INSTOCK", "LOWSTOCK", "OUTOFSTOCK"],
     },
   },
   {

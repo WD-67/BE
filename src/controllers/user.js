@@ -348,13 +348,13 @@ export const update = async (req, res) => {
         message: error.details.map((error) => error.message),
       });
     }
-    const passwordsMatch = await bcrypt.compare(
-      req.body.confirmPassword,
-      user.password
-    );
-    if (!passwordsMatch) {
-      return res.status(400).json({ message: "Mật khẩu không khớp" });
-    }
+    // const passwordsMatch = await bcrypt.compare(
+    //   req.body.confirmPassword,
+    //   user.password
+    // );
+    // if (!passwordsMatch) {
+    //   return res.status(400).json({ message: "Mật khẩu không khớp" });
+    // }
 
     // Thực hiện update thông tin user
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -463,7 +463,7 @@ export const changePassword = async (req, res) => {
 
     const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isOldPasswordValid) {
-      return res.status(400).json({ message: 'Mật khẩu cũ không đúng' });
+      return res.status(401).json({ message: 'Mật khẩu cũ không đúng' });
     }
 
     if (newPassword !== confirmPassword) {

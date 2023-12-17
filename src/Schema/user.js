@@ -9,10 +9,16 @@ export const signupSchema = Joi.object({
     "string.empty": 'Trường "tên khách hàng" không được để trống',
     "any.required": 'Trường "tên khách hàng" là bắt buộc',
   }),
-  ngaysinh: Joi.date().required().messages({
-    "date.base": 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
-    "date.empty": 'Trường "ngày sinh" không được để trống',
-    "any.required": 'Trường "ngày sinh" là bắt buộc',
+  ngaysinh: Joi.date()
+  .min('1900-01-01')
+  .max('now')
+  .required()
+  .messages({
+    'date.base': 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
+    'date.empty': 'Trường "ngày sinh" không được để trống',
+    'date.min': 'Trường "ngày sinh" phải lớn hơn hoặc bằng 1900-01-01',
+    'date.max': 'Trường "ngày sinh" không được lớn hơn ngày hiện tại',
+    'any.required': 'Trường "ngày sinh" là bắt buộc',
   }),
   email: Joi.string().email().required().messages({
     "string.empty": 'Trường "email" không được để trống',
@@ -64,10 +70,16 @@ export const updateSchema = Joi.object({
     "string.empty": 'Trường "tên khách hàng" không được để trống',
     "any.required": 'Trường "tên khách hàng" là bắt buộc',
   }),
-  ngaysinh: Joi.date().iso().required().messages({
-    "date.base": 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
-    "date.empty": 'Trường "ngày sinh" không được để trống',
-    "any.required": 'Trường "ngày sinh" là bắt buộc',
+  ngaysinh: Joi.date()
+  .min('1900-01-01')
+  .max('now')
+  .required()
+  .messages({
+    'date.base': 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
+    'date.empty': 'Trường "ngày sinh" không được để trống',
+    'date.min': 'Trường "ngày sinh" phải lớn hơn hoặc bằng 1900-01-01',
+    'date.max': 'Trường "ngày sinh" không được lớn hơn ngày hiện tại',
+    'any.required': 'Trường "ngày sinh" là bắt buộc',
   }),
   // email: Joi.string().email().required().messages({
   //   "string.empty": 'Trường "email" không được để trống',
@@ -78,10 +90,10 @@ export const updateSchema = Joi.object({
   //   "string.empty": 'Trường "image_url" không được để trống',
   //   "any.required": "Trường image_url là bắt buộc",
   // }),
-  confirmPassword: Joi.string().required().messages({
-    "string.empty": 'Trường "confirmPassword" không được để trống',
-    "any.required": 'Trường "confirmPassword" là bắt buộc',
-  }),
+  // confirmPassword: Joi.string().required().messages({
+  //   "string.empty": 'Trường "confirmPassword" không được để trống',
+  //   "any.required": 'Trường "confirmPassword" là bắt buộc',
+  // }),
 });
 
 export const updateAdminSchema = Joi.object({

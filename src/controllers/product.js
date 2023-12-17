@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 export const getAll = async (req, res) => {
   try {
     const products = await Product.find({ is_deleted: false })
-      .populate("sale")
+
       .populate("categoryId")
       .populate("colorSizes.color")
       .populate("colorSizes.sizes.size");
@@ -17,7 +17,6 @@ export const getAll = async (req, res) => {
     console.log(products);
     const productsWithSaleName = products.map((product) => ({
       ...product._doc,
-      sale: product.sale ? product.sale.sale : "No sale", // Thay đổi trường 'sale' thành tên của 'sale'
       categoryId: product.categoryId ? product.categoryId.name : "No category",
       colorSizes: product.colorSizes.map((colorSize) => ({
         ...colorSize._doc,
@@ -27,7 +26,7 @@ export const getAll = async (req, res) => {
             : "No color", // Thay đổi trường 'color' thành tên của 'color'
         sizes: colorSize.sizes.map((size) => ({
           ...size._doc,
-          size: size.size ? size.size.size : "No size", // Thay đổi trường 'size' thành tên của 'size'
+          size: size.size ? size.size.name : "No size", // Thay đổi trường 'size' thành tên của 'size'
         })),
       })),
       categoryId: product.categoryId ? product.categoryId.name : "No category",
@@ -47,7 +46,6 @@ export const getAll = async (req, res) => {
 export const get = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
-      .populate("sale")
       .populate("categoryId")
       .populate("colorSizes.color")
       .populate("colorSizes.sizes.size");
@@ -59,17 +57,16 @@ export const get = async (req, res) => {
     }
     const productWithSaleName = {
       ...product._doc,
-      sale: product.sale ? product.sale.sale : "No sale", // Thay đổi trường 'sale' thành tên của 'sale'
-      categoryId: product.categoryId.name,
+      // Thay đổi trường 'sale' thành tên của 'sale'
+      categoryId: product.categoryId ? product.categoryId.name : "No category",
       colorSizes: product.colorSizes.map((colorSize) => ({
         ...colorSize._doc,
         color: colorSize.color ? colorSize.color.name : "No color", // Thay đổi trường 'color' thành tên của 'color'
         sizes: colorSize.sizes.map((size) => ({
           ...size._doc,
-          size: size.size ? size.size.size : "No size", // Thay đổi trường 'size' thành tên của 'size'
+          size: size.size ? size.size.name : "No size", // Thay đổi trường 'size' thành tên của 'size'
         })),
       })),
-      categoryId: product.categoryId.name,
     };
     return res.json({
       message: "Lấy 1 sản phẩm thành công !",
@@ -95,7 +92,7 @@ export const create = async (req, res) => {
       price,
       image,
       quantity,
-      sale,
+      hot_sale,
       categoryId,
       description,
       colorSizes,
@@ -105,7 +102,6 @@ export const create = async (req, res) => {
       const formattedSizes = sizes.map((size) => {
         return {
           size: size.size,
-          quantity: size.quantity,
         };
       });
       return {
@@ -129,7 +125,7 @@ export const create = async (req, res) => {
       price,
       image,
       quantity,
-      sale,
+      hot_sale,
       categoryId,
       description,
       colorSizes: formattedColorSizes,
@@ -152,7 +148,7 @@ export const create = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const { error } = productSchema.validate(req.body, { abortEarly: false });
+    const { error } = UpdateProduct.validate(req.body, { abortEarly: false });
     if (error) {
       return res.status(400).json({
         message: error.details.map((error) => error.message),
@@ -171,33 +167,18 @@ export const update = async (req, res) => {
     // Lấy thông tin sản phẩm từ yêu cầu
     const updatedProduct = req.body;
     const { quantity, colorSizes } = updatedProduct;
-
-    // Tính toán số lượng tổng cộng từng kích thước và màu sắc
-    // let totalQuantity = 0;
-    // for (let colorSize of colorSizes) {
-    //   for (let size of colorSize.sizes) {
-    //     if (!isNaN(size.quantity)) {
-    //       totalQuantity += size.quantity;
-    //     } else {
-    //       return res.status(400).json({
-    //         message: "Giá trị quantity không hợp lệ",
-    //       });
-    //     }
-    //   }
-    // }
-
-    // // Cập nhật số lượng tổng cộng và trạng thái tồn kho
-    // updatedProduct.quantity = totalQuantity;
-    // switch (true) {
-    //   case totalQuantity <= 0:
-    //     updatedProduct.inventoryStatus = "OUTOFSTOCK";
-    //     break;
-    //   case totalQuantity <= 10:
-    //     updatedProduct.inventoryStatus = "LOWSTOCK";
-    //     break;
-    //   default:
-    //     updatedProduct.inventoryStatus = "INSTOCK";
-    // }
+    // Cập nhật số lượng tổng cộng và trạng thái tồn kho
+    updatedProduct.quantity = quantity;
+    switch (true) {
+      case quantity <= 0:
+        updatedProduct.inventoryStatus = "OUTOFSTOCK";
+        break;
+      case quantity <= 10:
+        updatedProduct.inventoryStatus = "LOWSTOCK";
+        break;
+      default:
+        updatedProduct.inventoryStatus = "INSTOCK";
+    }
 
     const product = await Product.findByIdAndUpdate(id, updatedProduct, {
       new: true,
@@ -209,13 +190,17 @@ export const update = async (req, res) => {
       });
     }
 
-    return res.json(product);
+    return res.json({
+      message: "Cập nhật sản phẩm thành công",
+      product: product,
+    });
   } catch (error) {
     return res.status(400).json({
       message: error.message,
     });
   }
 };
+//xóa tạm thời
 export const remove = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(
@@ -263,7 +248,7 @@ export const removeProduct = async (req, res) => {
     });
   }
 };
-
+//lấy danh sách đã xóa
 export const getDeletedProducts = async (req, res) => {
   try {
     const products = await Product.find({ is_deleted: true }).populate("image");
@@ -327,10 +312,22 @@ export const restoreProduct = async (req, res) => {
     });
   }
 };
+//tìm kiếm
 export const searchProducts = async (req, res) => {
   try {
     const searchQuery = new RegExp(req.params.name, "i");
-    const products = await Product.find({ name: searchQuery });
+
+    // Kiểm tra tính hợp lệ của tên trước khi thực hiện tìm kiếm
+    if (!searchQuery.test(req.params.name)) {
+      return res.status(400).json({
+        message: "Tên không hợp lệ",
+      });
+    }
+
+    const products = await Product.find({
+      name: searchQuery,
+      is_deleted: false,
+    });
     return res.status(200).json({
       message: "Sản phẩm tìm thấy",
       products,
