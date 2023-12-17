@@ -3,7 +3,7 @@ import SaleModel from "../models/sale.model";
 
 export const getList = async (req, res) => {
     try {
-        const payments = await SaleModel.find();
+        const payments = await SaleModel.find(req.query);
         res.status(200).json({
             meassge: "Lấy danh sách mã giảm giá thành công!!",
             data: payments,
@@ -38,6 +38,17 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
     try {
         const paymentUpdated = await SaleModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({
+            meassge: "Update sale success",
+            data: paymentUpdated,
+        });
+    } catch (error) {
+        res.status(500).json(serverError(error.message));
+    }
+};
+export const decreaseSale = async (req, res) => {
+    try {
+        const paymentUpdated = await SaleModel.findByIdAndUpdate(req.params.id, { $inc: { usageLimit: -1 } }, { new: true });
         res.json({
             meassge: "Update sale success",
             data: paymentUpdated,
