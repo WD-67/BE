@@ -2,8 +2,7 @@ import mongoose from "mongoose";
 
 const PaymentSchema = new mongoose.Schema(
     {
-        product: { type: mongoose.Types.ObjectId, ref: "Product", required: true },
-        code: { type: String, required: true, unique: true },
+        code: { type: String, default: "" },
         user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
         status: { type: String, require: true, enum: ["success", "pending", "error"], default: "pending" },
         message: { type: String },
