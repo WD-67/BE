@@ -35,7 +35,7 @@ class PayMentController {
             if (error) {
                 return res.status(400).json({ message: error.details[0].message });
             }
-            const { bank_code: bankCode = "", vnp_OrderInfo, totalPrice, language = "vn", user, } = req.body;
+            const { bank_code: bankCode = "", vnp_OrderInfo, totalPrice, language = "vn", user } = req.body;
             let date = new Date();
             let createDate = moment(date).format("YYYYMMDDHHmmss");
 
@@ -119,9 +119,9 @@ class PayMentController {
                                 });
 
                                 if (!isMatch) {
-                                   const newPayment= await PaymentModel.create({
+                                    const newPayment = await PaymentModel.create({
                                         user,
-                                        totalPrice: vnp_Params["vnp_Amount"],
+                                        totalPrice: vnp_Params["vnp_Amount"] / 100,
                                         code: vnp_Params["vnp_TxnRef"],
                                         message: vnp_Params["vnp_OrderInfo"],
                                         payment_method: "banking",

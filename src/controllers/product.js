@@ -14,7 +14,6 @@ export const getAll = async (req, res) => {
         message: "Không có sản phẩm nào !",
       });
     }
-    console.log(products);
     const productsWithSaleName = products.map((product) => ({
       ...product._doc,
       categoryId: product.categoryId ? product.categoryId.name : "No category",

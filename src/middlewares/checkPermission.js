@@ -15,7 +15,6 @@ export const checkPermission = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    console.log(token);
     // Bước 4: Giải mã token và lấy ID, kiểm tra ID tồn tại trong db không?
     const { id } = jwt.verify(token, process.env.SECRET_CODE);
     // Bước 5: Kiểm tra quyền của user có phải là admin không? Nếu không phải thì thông báo không có quyền truy cập tài nguyên

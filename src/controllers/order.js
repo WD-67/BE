@@ -97,7 +97,7 @@ export const getAll = async (req, res) => {
         },
         {
             $project: {
-                _id: "$_id._id",
+                _id: "$_id",
                 user_id: "$_id.user_id",
                 address: "$_id.address",
                 status: "$_id.status",
@@ -108,12 +108,30 @@ export const getAll = async (req, res) => {
                 products: 1,
             },
         },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
     ]);
 
     return res.status(200).json({
         message: "Get all order successfully",
         data: orders,
     });
+};
+
+export const updateStatus = async (req, res, next) => {
+    try {
+        const posts = await Orders.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+        return res.status(200).json({
+            message: "Update order successfully",
+            data: posts,
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
 };
 
 // Create order
@@ -125,19 +143,6 @@ export const createOrder = async (req, res) => {
         return res.status(200).json({
             message: "Create order successfully",
             data: order,
-        });
-    } catch (error) {
-        res.status(500).json({ error: true, message: error.message });
-    }
-};
-
-export const updateStatus = async (req, res, next) => {
-    try {
-        const posts = await Orders.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
-        return res.status(200).json({
-            message: "Update order successfully",
-            data: posts,
         });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });

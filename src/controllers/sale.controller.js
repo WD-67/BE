@@ -13,6 +13,18 @@ export const getList = async (req, res) => {
     }
 };
 
+export const getByCode = async (req, res) => {
+    try {
+        const currentDate = new Date().toISOString();
+        const sale = await SaleModel.findOne({ code: req.params.code, expirationDate: { $gt: currentDate } });
+        res.json({
+            meassge: "Success",
+            data: sale,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
 export const getById = async (req, res) => {
     try {
         const payment = await SaleModel.findById(req.params.id);
