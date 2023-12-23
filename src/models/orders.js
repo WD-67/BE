@@ -23,9 +23,8 @@ const Orders = new mongoose.Schema(
         reason: { type: String },
     },
     {
+        timestamps: true,
         collection: "Orders",
-        versionKey: false,
-        timestamp: true,
     }
 );
 

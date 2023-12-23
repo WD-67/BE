@@ -9,10 +9,16 @@ export const signupSchema = Joi.object({
     "string.empty": 'Trường "tên khách hàng" không được để trống',
     "any.required": 'Trường "tên khách hàng" là bắt buộc',
   }),
-  ngaysinh: Joi.date().required().messages({
-    "date.base": 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
-    "date.empty": 'Trường "ngày sinh" không được để trống',
-    "any.required": 'Trường "ngày sinh" là bắt buộc',
+  ngaysinh: Joi.date()
+  .min('1900-01-01')
+  .max('now')
+  .required()
+  .messages({
+    'date.base': 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
+    'date.empty': 'Trường "ngày sinh" không được để trống',
+    'date.min': 'Trường "ngày sinh" phải lớn hơn hoặc bằng 1900-01-01',
+    'date.max': 'Trường "ngày sinh" không được lớn hơn ngày hiện tại',
+    'any.required': 'Trường "ngày sinh" là bắt buộc',
   }),
   email: Joi.string().email().required().messages({
     "string.empty": 'Trường "email" không được để trống',
@@ -64,10 +70,16 @@ export const updateSchema = Joi.object({
     "string.empty": 'Trường "tên khách hàng" không được để trống',
     "any.required": 'Trường "tên khách hàng" là bắt buộc',
   }),
-  ngaysinh: Joi.date().iso().required().messages({
-    "date.base": 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
-    "date.empty": 'Trường "ngày sinh" không được để trống',
-    "any.required": 'Trường "ngày sinh" là bắt buộc',
+  ngaysinh: Joi.date()
+  .min('1900-01-01')
+  .max('now')
+  .required()
+  .messages({
+    'date.base': 'Trường "ngày sinh" phải là kiểu ngày tháng hợp lệ',
+    'date.empty': 'Trường "ngày sinh" không được để trống',
+    'date.min': 'Trường "ngày sinh" phải lớn hơn hoặc bằng 1900-01-01',
+    'date.max': 'Trường "ngày sinh" không được lớn hơn ngày hiện tại',
+    'any.required': 'Trường "ngày sinh" là bắt buộc',
   }),
   // email: Joi.string().email().required().messages({
   //   "string.empty": 'Trường "email" không được để trống',
@@ -78,10 +90,10 @@ export const updateSchema = Joi.object({
   //   "string.empty": 'Trường "image_url" không được để trống',
   //   "any.required": "Trường image_url là bắt buộc",
   // }),
-  confirmPassword: Joi.string().required().messages({
-    "string.empty": 'Trường "confirmPassword" không được để trống',
-    "any.required": 'Trường "confirmPassword" là bắt buộc',
-  }),
+  // confirmPassword: Joi.string().required().messages({
+  //   "string.empty": 'Trường "confirmPassword" không được để trống',
+  //   "any.required": 'Trường "confirmPassword" là bắt buộc',
+  // }),
 });
 
 export const updateAdminSchema = Joi.object({
@@ -98,10 +110,22 @@ export const updateAdminSchema = Joi.object({
 
 export const changePasswordSchema = Joi.object({
   oldPassword: Joi.string().required().label('Mật khẩu cũ'),
-  newPassword: Joi.string().min(5).required().label('Mật khẩu mới').messages({
-      "string.empty": "newPassword không được để trống",
-      "string.min": "newPassword phải có ít nhất 5 ký tự",
-      "any.required": "newPassword là trường bắt buộc"
+  newPassword: Joi.string().min(6).required().label('Mật khẩu mới').messages({
+      "string.empty": "mật khẩu mới không được để trống",
+      "string.min": "mật khẩu mới phải có ít nhất 5 ký tự",
+      "any.required": "mật khẩu mới là trường bắt buộc"
+  }),
+  confirmPassword: Joi.string().required().valid(Joi.ref("newPassword")).messages({
+      "any.only": "Mật khẩu bạn vừa nhập không trùng khớp hãy nhập lại",
+      "any.required": "confirmPassword là trường bắt buộc",
+    }).options({ abortEarly: false }),
+});
+
+export const resetPasswordSchema = Joi.object({
+  newPassword: Joi.string().min(6).required().label('Mật khẩu mới').messages({
+      "string.empty": "mật khẩu mới không được để trống",
+      "string.min": "mật khẩu mới phải có ít nhất 6 ký tự",
+      "any.required": "mật khẩu mới là trường bắt buộc"
   }),
   confirmPassword: Joi.string().required().valid(Joi.ref("newPassword")).messages({
       "any.only": "Mật khẩu bạn vừa nhập không trùng khớp hãy nhập lại",

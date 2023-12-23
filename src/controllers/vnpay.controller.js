@@ -121,7 +121,7 @@ class PayMentController {
                                 if (!isMatch) {
                                     const newPayment = await PaymentModel.create({
                                         user,
-                                        totalPrice: vnp_Params["vnp_Amount"],
+                                        totalPrice: vnp_Params["vnp_Amount"] / 100,
                                         code: vnp_Params["vnp_TxnRef"],
                                         message: vnp_Params["vnp_OrderInfo"],
                                         payment_method: "banking",

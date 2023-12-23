@@ -3,6 +3,7 @@ import Joi from "joi";
 export const validation = (req, res, next) => {
     const schema = Joi.object({
         name: Joi.string().required(),
+        code: Joi.string().required(),
         type: Joi.string().required(),
         sale: Joi.string().required(),
         usageLimit: Joi.number().required(),

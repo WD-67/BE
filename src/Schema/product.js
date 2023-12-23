@@ -21,21 +21,12 @@ export const productSchema = Joi.object({
     "any.required": "Trường image này là bắt buộc ",
     "string.base": "image phải là 1 string",
   }),
-  colorSizes: Joi.array().required(),
-  // sizes: Joi.array().required(),
-  sale: Joi.string().required(),
+  listQuantityRemain: Joi.array().required(),
+  hot_sale: Joi.number().required(),
+
   description_short: Joi.string(),
   quantity: Joi.number().messages(),
-  categoryId: Joi.string().required().messages({
-    "string.empty": "categoryId không được để trống",
-    "any.required": "Trường categoryId này là bắt buộc",
-    "string.base": "categoryId phải là 1 string",
-  }),
-  trang_thai: Joi.string().valid("active", "deactive").required().messages({
-    "string.empty": "Trạng thái không được để trống",
-    "any.required": "Trường Trạng thái này là bắt buộc",
-    "string.base": "Trạng thái phải là 1 string",
-  }),
+  categoryId: Joi.string().required(),
   is_delete: Joi.boolean(),
 });
 export const UpdateProduct = Joi.object({
@@ -63,21 +54,14 @@ export const UpdateProduct = Joi.object({
     "any.required": "Trường image này là bắt buộc ",
     "string.base": "image phải là 1 string",
   }),
-  colorSizes: Joi.array().required(),
+  listQuantityRemain: Joi.array().required(),
+  // sizes: Joi.array().required(),
+  hot_sale: Joi.number().required(),
 
-  sale: Joi.string(),
   description_short: Joi.string(),
   quantity: Joi.number().messages(),
-  categoryId: Joi.string().required().messages({
-    "string.empty": "categoryId không được để trống",
-    "any.required": "Trường categoryId này là bắt buộc",
-    "string.base": "categoryId phải là 1 string",
-  }),
-  trang_thai: Joi.string().valid("active", "deactive").required().messages({
-    "string.empty": "Trạng thái không được để trống",
-    "any.required": "Trường Trạng thái này là bắt buộc",
-    "string.base": "Trạng thái phải là 1 string",
-  }),
+  categoryId: Joi.string().required(),
+  is_delete: Joi.boolean(),
 });
 export const imageProductSchema = Joi.object({
   image: Joi.array().required().messages({

@@ -97,7 +97,7 @@ export const getAll = async (req, res) => {
         },
         {
             $project: {
-                _id: "$_id._id",
+                _id: "$_id",
                 user_id: "$_id.user_id",
                 address: "$_id.address",
                 status: "$_id.status",
@@ -106,6 +106,11 @@ export const getAll = async (req, res) => {
                 createdAt: "$_id.createdAt",
                 updatedAt: "$_id.updatedAt",
                 products: 1,
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
             },
         },
     ]);

@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
     },
-    trang_thai: { type: String, enum: ["Active", "Inactive"], default: "Active" },
+    trang_thai: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
     image_url: {
       type: String,
     },
@@ -42,8 +46,14 @@ const userSchema = new mongoose.Schema(
         ref: "Address",
       },
     ],
+    otp: {
+      type: Number,
+    },
   },
-  { timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 }, versionKey: false }
+  {
+    timestamps: { currentTime: () => Date.now() + 7 * 60 * 60 * 1000 },
+    versionKey: false,
+  }
 );
 
 export default mongoose.model("User", userSchema);
