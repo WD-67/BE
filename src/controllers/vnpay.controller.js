@@ -35,7 +35,7 @@ class PayMentController {
             if (error) {
                 return res.status(400).json({ message: error.details[0].message });
             }
-            const { bank_code: bankCode = "", vnp_OrderInfo, totalPrice, language = "vn", user, } = req.body;
+            const { bank_code: bankCode = "", vnp_OrderInfo, totalPrice, language = "vn", user } = req.body;
             let date = new Date();
             let createDate = moment(date).format("YYYYMMDDHHmmss");
 
@@ -119,7 +119,7 @@ class PayMentController {
                                 });
 
                                 if (!isMatch) {
-                                    await PaymentModel.create({
+                                    const newPayment = await PaymentModel.create({
                                         user,
                                         totalPrice: vnp_Params["vnp_Amount"],
                                         code: vnp_Params["vnp_TxnRef"],
@@ -127,10 +127,10 @@ class PayMentController {
                                         payment_method: "banking",
                                         status: "success",
                                     });
+                                    res.redirect(`http://localhost:5173/order?code=${vnp_Params["vnp_TxnRef"]}&payment_id=${newPayment._id}`);
+                                    return;
                                 }
-                                res.redirect(
-                                    `http://localhost:5173/order&code=${vnp_Params["vnp_TxnRef"]}&payment_id=${newPayment._id}`
-                                );
+                                res.status(200).json({ RspCode: "00", Message: "Success" });
                             } else {
                                 //that bai
                                 //paymentStatus = '2'

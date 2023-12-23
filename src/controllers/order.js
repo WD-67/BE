@@ -116,6 +116,19 @@ export const getAll = async (req, res) => {
     });
 };
 
+export const updateStatus = async (req, res, next) => {
+    try {
+        const posts = await Orders.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+        return res.status(200).json({
+            message: "Update order successfully",
+            data: posts,
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message });
+    }
+};
+
 // Create order
 export const createOrder = async (req, res) => {
     try {
