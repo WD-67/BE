@@ -7,8 +7,6 @@ export const getAll = async (req, res) => {
     const products = await Product.find({ is_deleted: false }).populate(
       "categoryId"
     );
-    // .populate("colorSizes.color");
-    // .populate("colorSizes.sizes.size");
     if (products.length === 0) {
       return res.json({
         message: "Không có sản phẩm nào !",
@@ -16,18 +14,6 @@ export const getAll = async (req, res) => {
     }
     const productsWithSaleName = products.map((product) => ({
       ...product._doc,
-      categoryId: product.categoryId ? product.categoryId.name : "No category",
-      // colorSizes: product.colorSizes.map((colorSize) => ({
-      //   ...colorSize._doc,
-      //   color:
-      //     colorSize.color && colorSize.color.name
-      //       ? colorSize.color.name
-      //       : "No color", // Thay đổi trường 'color' thành tên của 'color'
-      //   sizes: colorSize.sizes.map((size) => ({
-      //     ...size._doc,
-      //     size: size.size ? size.size.name : "No size", // Thay đổi trường 'size' thành tên của 'size'
-      //   })),
-      // })),
       categoryId: product.categoryId ? product.categoryId.name : "No category",
     }));
 
@@ -44,12 +30,7 @@ export const getAll = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate(
-      "categoryId"
-    );
-    // .populate("colorSizes.color")
-    // .populate("colorSizes.sizes.size");
-
+    const product = await Product.findById(req.params.id);
     if (!product) {
       return res.json({
         message: "Lấy sản phẩm không thành công !",
@@ -57,16 +38,8 @@ export const get = async (req, res) => {
     }
     const productWithSaleName = {
       ...product._doc,
+
       // Thay đổi trường 'sale' thành tên của 'sale'
-      categoryId: product.categoryId ? product.categoryId.name : "No category",
-      // colorSizes: product.colorSizes.map((colorSize) => ({
-      //   ...colorSize._doc,
-      //   color: colorSize.color ? colorSize.color.name : "No color", // Thay đổi trường 'color' thành tên của 'color'
-      //   sizes: colorSize.sizes.map((size) => ({
-      //     ...size._doc,
-      //     size: size.size ? size.size.name : "No size", // Thay đổi trường 'size' thành tên của 'size'
-      //   })),
-      // })),
     };
     return res.json({
       message: "Lấy 1 sản phẩm thành công !",

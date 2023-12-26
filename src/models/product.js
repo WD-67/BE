@@ -2,6 +2,7 @@ import { number } from "joi";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 import paginate from "mongoose-paginate-v2";
+
 const productSchema = new Schema(
   {
     name: String,
