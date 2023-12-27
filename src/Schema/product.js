@@ -25,7 +25,6 @@ export const productSchema = Joi.object({
   hot_sale: Joi.number().required(),
 
   description_short: Joi.string(),
-  quantity: Joi.number().messages(),
   categoryId: Joi.string().required(),
   is_delete: Joi.boolean(),
 });
@@ -59,7 +58,6 @@ export const UpdateProduct = Joi.object({
   hot_sale: Joi.number().required(),
 
   description_short: Joi.string(),
-  quantity: Joi.number().messages(),
   categoryId: Joi.string().required(),
   is_delete: Joi.boolean(),
 });

@@ -9,7 +9,6 @@ const productSchema = new Schema(
     price: Number,
     image: Array,
     description: String,
-    quantity: Number,
     categoryId: {
       type: mongoose.Types.ObjectId,
       ref: "Category",
