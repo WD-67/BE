@@ -30,7 +30,10 @@ export const getAll = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate(
+      "categoryId"
+    );;
+   
     if (!product) {
       return res.json({
         message: "Lấy sản phẩm không thành công !",
@@ -38,7 +41,7 @@ export const get = async (req, res) => {
     }
     const productWithSaleName = {
       ...product._doc,
-      categoryId: "No category", // Thay đổi trường 'sale' thành tên của 'sale'
+      categoryId: product.categoryId ? product.categoryId.name : "No category",
 
       // Thay đổi trường 'sale' thành tên của 'sale'
     };
