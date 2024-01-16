@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    phone: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
@@ -40,6 +44,10 @@ const userSchema = new mongoose.Schema(
         ref: "FavoriteProduct",
       },
     ],
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
     addressUser: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -42,7 +42,6 @@ export const get = async (req, res) => {
     const productWithSaleName = {
       ...product._doc,
       categoryId: product.categoryId ? product.categoryId.name : "No category",
-
       // Thay đổi trường 'sale' thành tên của 'sale'
     };
     return res.json({
