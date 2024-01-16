@@ -27,6 +27,10 @@ const Orders = new mongoose.Schema(
         sale_id: {
             type: mongoose.Types.ObjectId,
         },
+        // gmail: {
+        //     type: String,
+        //     required: true,
+        // },
         reason: {type: String},
         total_price: Number,
         total_amount_paid: {type: Number, default: 0},

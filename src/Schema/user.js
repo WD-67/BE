@@ -20,6 +20,16 @@ export const signupSchema = Joi.object({
     'date.max': 'Trường "ngày sinh" không được lớn hơn ngày hiện tại',
     'any.required': 'Trường "ngày sinh" là bắt buộc',
   }),
+  phone: Joi.string()
+  .pattern(
+    /^(\+84|0)[3|5|7|8|9]\d{8}$/
+  )
+  .required()
+  .messages({
+    "string.empty": 'Trường "số điện thoại" không được để trống',
+    "string.pattern.base": 'Trường "số điện thoại" không đúng định dạng',
+    "any.required": 'Trường "số điện thoại" là bắt buộc',
+  }),
   email: Joi.string().email().required().messages({
     "string.empty": 'Trường "email" không được để trống',
     "string.email": 'Trường "email" không đúng định dạng',

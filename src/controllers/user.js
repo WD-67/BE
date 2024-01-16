@@ -17,6 +17,50 @@ const transporter = nodemailer.createTransport({
     pass: EMAIL_PASSWORD,
   },
 });
+export const changeStatusToInactive = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Tìm người dùng trong cơ sở dữ liệu
+    const user = await User.findById(id);
+    
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    // Đặt trạng thái thành "Inactive"
+    user.trang_thai = "Inactive";
+
+    // Lưu người dùng đã thay đổi trạng thái
+    await user.save();
+
+    return res.json({ message: "Chuyển trạng thái sang Inactive thành công" });
+  } catch (error) {
+    return res.status(500).json({ message: "Lỗi server" });
+  }
+};
+export const changeStatusToActive = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Tìm người dùng trong cơ sở dữ liệu
+    const user = await User.findById(id);
+    
+    if (!user) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    // Đặt trạng thái thành "Active"
+    user.trang_thai = "Active";
+
+    // Lưu người dùng đã thay đổi trạng thái
+    await user.save();
+
+    return res.json({ message: "Chuyển trạng thái sang Active thành công" });
+  } catch (error) {
+    return res.status(500).json({ message: "Lỗi server" });
+  }
+};
 
 export const signout = async (req, res) => {
   try {
@@ -43,7 +87,7 @@ export const signout = async (req, res) => {
 };
 
 export const signupUser = async (req, res) => {
-  const { name, fullname, ngaysinh, trang_thai, email, password, image_url } =
+  const { name, fullname, ngaysinh, trang_thai, phone, email, password, image_url } =
     req.body;
 
   try {
@@ -79,6 +123,7 @@ export const signupUser = async (req, res) => {
       name,
       fullname,
       ngaysinh,
+      phone,
       email,
       image_url,
       password,
@@ -293,7 +338,7 @@ export const signIn = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    const users = await User.find().populate("role", "role_name");
+    const users = await User.find({ is_deleted: false }).populate("role", "role_name");
 
     if (users.length === 0) {
       return res.json({
@@ -314,23 +359,105 @@ export const getAll = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { is_deleted: true },
+      { new: true }
+    );
+
     if (!user) {
       return res.json({
-        message: "Xóa user không thành công",
+        message: "Xóa người dùng không thành công hoặc người dùng không tồn tại!",
       });
     }
+
     return res.json({
-      message: "Xóa user thành công",
+      message: "Xóa người dùng thành công!",
       user,
     });
   } catch (error) {
     if (error.name === "CastError") {
       return res.status(400).json({ message: "Id không hợp lệ" });
     }
+    return res.status(400).json({
+      message: error.message,
+    });
   }
 };
+//xóa vinh viễn
+export const removeUser = async (req, res) => {
+  try {
+    // Find and remove the product by ID
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
 
+    if (!deletedUser) {
+      return res.json({
+        message: "Xóa người dùng không thành công hoặc người dùng không tồn tại!",
+      });
+    }
+
+    return res.json({
+      message: "Xóa người dùng thành công!",
+      user: deletedUser,
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Id không hợp lệ" });
+    }
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+export const getDeletedUser = async (req, res) => {
+  try {
+    const deletedUsers = await User.find({ is_deleted: true });
+
+    if (deletedUsers.length === 0) {
+      return res.json({
+        message: "Không có người dùng nào đã bị xóa mềm!",
+      });
+    }
+
+    return res.json({
+      message: "Lấy danh sách người dùng đã bị xóa mềm thành công!",
+      deletedUsers,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+//khôi phục
+export const restoreUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { is_deleted: false },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.json({
+        message:
+          "Khôi phục người dùng không thành công hoặc người dùng không tồn tại!",
+      });
+    }
+
+    return res.json({
+      message: "Khôi phục người dùng thành công!",
+      user,
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Id không hợp lệ" });
+    }
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
 export const update = async (req, res) => {
   try {
     // Lấy thông tin user từ cơ sở dữ liệu

@@ -148,9 +148,9 @@ export const getAll = async (req, res) => {
             {
                 $skip: skip,
             },
-            {
-                $limit: limit,
-            },
+            // {
+            //     $limit: limit,
+            // },
         ]);
 
         return res.status(200).json({
@@ -178,7 +178,7 @@ export const getAll = async (req, res) => {
                     });
                 }
                 const quantityInfoIndex = existingProduct.listQuantityRemain.findIndex(
-                    (item) => item.colorHex === color && item.nameSize === size
+                    (item) => item.nameColor === color && item.nameSize === size
                 );
                 existingProduct.listQuantityRemain[quantityInfoIndex].quantity += quantity;
 
