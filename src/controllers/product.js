@@ -38,6 +38,7 @@ export const get = async (req, res) => {
     }
     const productWithSaleName = {
       ...product._doc,
+      categoryId: "No category", // Thay đổi trường 'sale' thành tên của 'sale'
 
       // Thay đổi trường 'sale' thành tên của 'sale'
     };
