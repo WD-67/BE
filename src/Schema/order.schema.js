@@ -12,7 +12,7 @@ export const validation = (req, res, next) => {
         }),
         total_price: Joi.number().required(),
         address: Joi.string().required(),
-        // gmail: Joi.string().required(),
+        email: Joi.string().required(),
         sale_id: Joi.string().default(null), // Cho phép giá trị là null
         total_amount_paid:Joi.number().default(0),
         payment_type:Joi.string().default('cash'),
